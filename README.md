@@ -59,6 +59,8 @@ You'll see something like this when your workflow has run successfully:
 | `directory`        | The root directory of your flake.                                                                                                                     | `.`                                                                                                                                                                       |
 | `fail-fast`        | Whether to cancel all in-progress jobs if any matrix job fails                                                                                        | `true`                                                                                                                                                                    |
 | `runner-map`       | A custom mapping of [Nix system types][nix-system] to desired Actions runners                                                                         | `{ "aarch64-darwin": "macos-latest", "x86_64-darwin": "macos-latest", "x86_64-linux": "ubuntu-latest", "i686-linux": "ubuntu-latest", "aarch64-linux": "ubuntu-latest" }` |
+| `extra-conf`       | Additional Nix configuration options to include, such as extra experimental features. For example: `extra-experimental-features = pipe-operators`      | `""`                                                                                                                                                                      |
+| `diagnostic-endpoint` | Endpoint for diagnostic information from determinate-nix-action.                                                                                    | `https://install.determinate.systems/nix-installer/diagnostic`                                                                                                            |
 
 ## Example configurations
 
@@ -201,6 +203,25 @@ jobs:
     with:
       fail-fast: false
 ```
+
+#### Adding extra Nix configuration options
+
+You can add additional Nix configuration options, such as enabling experimental features, by using the `extra-conf` parameter:
+
+```yaml
+jobs:
+  DeterminateCI:
+    uses: DeterminateSystems/ci/.github/workflows/workflow.yml@main
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      extra-conf: |
+        extra-experimental-features = pipe-operators
+        allow-import-from-derivation = true
+```
+
+This is particularly useful when you need to enable experimental features that are required by your flake but are not enabled by default.
 
 ## Workflow outputs
 
